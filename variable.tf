@@ -1,18 +1,18 @@
-variable "aws_region" {
+variable "region" {
   type        = string
-  description = "AWS region to deploy into"
-  default     = "us-west-2"
+  description = "Enter Your AWS Region"
+  default     = "ca-central-1"
 }
 
 variable "ami_id" {
   type        = string
   description = "AMI ID to use for the instance"
-  default     = "ami-123456"
+  default     = "ami-03814457ed908d8f6"
 }
 
 variable "instance_type" {
   type        = string
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 
 variable "key_name" {
