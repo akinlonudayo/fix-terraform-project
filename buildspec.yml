@@ -16,7 +16,7 @@ phases:
 
   pre_build:
     commands:
-      - echo "Switching to Terraform working directory: ${TF_WORKING_DIR}"
+      - echo "Setting AWS region to ${AWS_REGION}..."
       - cd ${TF_WORKING_DIR}
       - echo "Initializing Terraform..."
       - terraform init -input=false
