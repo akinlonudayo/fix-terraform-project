@@ -31,7 +31,7 @@ phases:
   post_build:
     commands:
       - echo "Applying Terraform plan..."
-      - terraform apply -input=false -auto-approve tfplan
+      - terraform apply -input=false -auto-approve main.tf
       - echo "Terraform apply completed successfully."
 
 artifacts:
