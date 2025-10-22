@@ -18,7 +18,7 @@ phases:
     commands:
       - echo "Entering Terraform working directory: $TF_WORKING_DIR"
       - cd $TF_WORKING_DIR
-      - echo "Initializing Terraform..."
+      - echo "Initializing Terraform backend..."
       - terraform init -input=false
 
   build:
