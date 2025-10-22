@@ -3,50 +3,41 @@ version: 0.2
 env:
   variables:
     TF_VERSION: "1.9.5"
-    TF_WORKING_DIR: "terraform-source"
+    TF_WORKING_DIR: "terraform"
     AWS_REGION: "ca-central-1"
-    ACTION: "apply"  # Change to "destroy" to tear down infrastructure
+  # Optional if using parameter store or secrets manager
+  # parameter-store:
+  #   TF_VAR_db_password: "/myapp/db/password"
 
 phases:
   install:
-    runtime-versions:
-      python: 3.9
     commands:
-      - echo "Installing Terraform v${TF_VERSION}..."
-      - rm -rf terraform terraform.zip
+      - echo "Installing Terraform..."
       - curl -o terraform.zip https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
-      - unzip -o terraform.zip
-      - mv terraform /usr/local/bin/
+      - unzip terraform.zip -d /usr/local/bin/
       - terraform -version
-      - echo "Terraform installation complete."
 
   pre_build:
     commands:
-      - echo "Initializing Terraform in ${TF_WORKING_DIR}..."
-      - cd ${TF_WORKING_DIR}
+      - echo "Entering Terraform working directory: $TF_WORKING_DIR"
+      - cd $TF_WORKING_DIR
+      - echo "Initializing Terraform backend..."
       - terraform init -input=false
 
   build:
     commands:
-      - echo "Terraform action selected:${ACTION}"
-      - >
-        if [ "${ACTION}" = "apply" ]; then
-          echo "Running terraform plan and apply...";
-          terraform plan -input=false -out=tfplan;
-          terraform apply -auto-approve tfplan;
-        elif [ "${ACTION}" = "destroy" ]; then
-          echo "Running terraform destroy...";
-          terraform destroy -auto-approve;
-        else
-          echo "❌ Invalid ACTION flag. Must be 'apply' or 'destroy'.";
-          exit 1;
-        fi
+      - echo "Validating Terraform configuration..."
+      - terraform validate
+      - echo "Planning Terraform deployment..."
+      - terraform plan -out=tfplan -input=false
 
   post_build:
     commands:
-      - echo "Terraform ${ACTION} completed successfully."
-      - terraform output || true  # Outputs only if resources exist
+      - echo "Applying Terraform changes..."
+      - terraform apply -input=false -auto-approve tfplan
+      - echo "Terraform deployment completed successfully."
 
 artifacts:
   files:
-    - "**/*"
+    - '**/*'
+  discard-paths: yes

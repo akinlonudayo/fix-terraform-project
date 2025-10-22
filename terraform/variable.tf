@@ -18,6 +18,7 @@ variable "instance_type" {
 variable "key_name" {
   type        = string
   description = "EC2 Key pair name"
+  default = "metrockpsep292025"
 }
 
 variable "environment" {
@@ -28,4 +29,5 @@ variable "environment" {
 variable "vpc_id" {
   type        = string
   description = "VPC ID to launch resources into"
+  default = "vpc-053b9ebca1c4699e6"
 }
